@@ -28,8 +28,7 @@ namespace UrlPrieto.Controllers
         {
             return _urlContext.Users.SingleOrDefault(x => x.User == user && x.Password == password);
         }
-       
-
+      
         [HttpPost]
         [Route("Authenticate")]
         public ActionResult<string> Auth(AuthDto authDto)

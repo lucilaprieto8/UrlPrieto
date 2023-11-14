@@ -17,7 +17,6 @@ namespace UrlPrieto.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-
         private readonly UsersServices _usersServices;
         private readonly UrlContext _urlContext;
 
