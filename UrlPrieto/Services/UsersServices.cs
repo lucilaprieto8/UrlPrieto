@@ -18,11 +18,17 @@ namespace UrlPrieto.Services
         }
         public void CreateUser(UserForCreationDto UserForCreate)
         {
+            var exist = _urlContext.Users.FirstOrDefault(u => u.User == UserForCreate.User);
+            if (exist != null)
+            {
+                throw new Exception("Ese usuario ya existe");
+            }
             Users user = new Users()
             {
                 User = UserForCreate.User,
                 Password = UserForCreate.Password,
             };
+
             _urlContext.Add(user);
             _urlContext.SaveChanges();
         }

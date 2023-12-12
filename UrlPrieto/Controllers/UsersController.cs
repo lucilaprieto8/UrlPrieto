@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -27,7 +28,6 @@ namespace UrlPrieto.Controllers
         }
 
         [HttpPost]
-
         public IActionResult UserCreate([FromBody] UserForCreationDto UserForCreate)
         {
             try
@@ -36,7 +36,7 @@ namespace UrlPrieto.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
             return Created("Created", UserForCreate);
         }
@@ -48,5 +48,46 @@ namespace UrlPrieto.Controllers
             var urls = _urlContext.Url.Where(u => u.IdUser == userId).ToList();
             return Ok(urls);
         }
-    }
+
+        [HttpGet("Restantes")]
+
+        public IActionResult GetRestantes()
+        {
+            int userId = int.Parse(User.Claims.First(x => x.Type == "id").Value);
+            var restanT = _urlContext.Users.FirstOrDefault(u => u.Id == userId);
+            if (restanT == null)
+            {
+                return NotFound();
+            }
+            return Ok(restanT.Restantes);
+        }
+
+        [HttpPut]
+
+        public IActionResult UpdateRestantes()
+        {
+            int userId = int.Parse(User.Claims.First(x => x.Type == "id").Value);
+            var restanT = _urlContext.Users.FirstOrDefault(u => u.Id == userId);
+            restanT.Restantes = 10;
+            _urlContext.Update(restanT);
+            _urlContext.SaveChanges();
+            return Ok();
+        }
+
+
+        [HttpDelete]
+
+        public IActionResult DeleteUser(int id)
+        {
+            var userId = _urlContext.Users.Single(x => x.Id == id);
+            if (userId == null)
+            {
+                return NotFound();
+            }
+            _urlContext.Users.Remove(userId);
+            _urlContext.SaveChanges();
+            return Ok();
+        }
+
+    }   
 }

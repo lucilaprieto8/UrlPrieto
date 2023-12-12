@@ -28,6 +28,12 @@ namespace UrlPrieto.Controllers
         {
             int userId = int.Parse(User.Claims.First(x => x.Type == "id").Value);
             string UrlShort = Helpers.CustomUrlHelper.Shortener();
+            var userinuse = _UrlContext.Users.FirstOrDefault(u => u.Id == userId);
+
+            if (userinuse.Restantes < 1) {
+                return BadRequest("El usuario no tiene mas restantes");
+            }
+
             Url url = new Url()
             {
                 largeUrl = UrlLarge.largeUrl,
@@ -36,11 +42,14 @@ namespace UrlPrieto.Controllers
                 IdCategory = UrlLarge.categoryId,
                 IdUser = userId
             };
+
+            userinuse.Restantes--;
+            _UrlContext.Update(userinuse);
+
             _UrlContext.Add(url);
             _UrlContext.SaveChanges();
 
             return Ok(UrlShort);
-
         }
 
         [HttpGet("{UrlShort}")] 

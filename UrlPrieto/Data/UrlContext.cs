@@ -8,7 +8,6 @@ namespace UrlPrieto.Data
     {
         public DbSet<Url> Url { get; set; }
         public DbSet<Categories> Categories { get; set; }
-
         public DbSet<Users> Users { get; set; }
         public UrlContext(DbContextOptions<UrlContext> options) : base(options) {
         }

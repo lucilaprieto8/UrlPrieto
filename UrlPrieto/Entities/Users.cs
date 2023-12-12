@@ -13,6 +13,8 @@ namespace UrlPrieto.Entities
         [Required]
         public string Password { get; set; }
 
+        public int Restantes { get; set; } = 10;
+
         public IEnumerable<Url> urls { get; set; }
 
     }
